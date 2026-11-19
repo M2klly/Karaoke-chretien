@@ -3,189 +3,313 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#211638">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Karaoké & Louange</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#120e1c;color:#fff;font-family:Arial,sans-serif}
-header{background:#211638;padding:25px 20px 30px;border-radius:0 0 25px 25px}
-.logo{color:#e9c878;font-size:13px;letter-spacing:2px;font-weight:bold}
-h1{font-size:29px;margin:20px 0 8px}
-header p{color:#d5c9e4;line-height:1.5}
-main{padding:20px;max-width:750px;margin:auto}
-input,select{width:100%;padding:15px;border-radius:12px;border:1px solid #514565;background:#241d31;color:white;font-size:15px;margin:6px 0}
-button{border:0;border-radius:12px;padding:12px 15px;background:#8060a8;color:white;font-weight:bold;font-size:14px;cursor:pointer}
-button:active{opacity:.7}
-.categories{display:flex;gap:9px;overflow-x:auto;margin:15px 0}
-.categories button{white-space:nowrap;background:#302640}
-.categories button.active{background:#d4b66d;color:#211638}
-h2{font-size:19px;margin-top:27px}
-.song{background:#241d31;padding:15px;border-radius:15px;margin:12px 0;display:flex;align-items:center;gap:12px}
-.cover{width:52px;height:52px;border-radius:12px;background:#49365e;display:grid;place-items:center;font-size:24px;flex-shrink:0}
-.song-info{flex:1;min-width:0}
-.song-info strong{display:block;margin-bottom:5px}
-.song-info small{color:#b9adc9}
-.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.actions button{padding:9px;font-size:12px}
-.secondary{background:#49365e}
-#player{background:#241d31;border-radius:16px;padding:15px;margin-top:15px}
-iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:10px}
-.hidden{display:none}
-.note{color:#b9adc9;font-size:12px;line-height:1.5}
-footer{text-align:center;padding:30px;color:#a99bb9;font-size:12px}
+:root {
+  --gold:#b58a3b;
+  --cream:#f8f5ee;
+  --ink:#302b26;
+  --muted:#766f65;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+}
+header {
+  background:white;
+  padding:28px 18px;
+  text-align:center;
+  border-bottom:1px solid #eadfca;
+}
+h1 { margin:0; color:var(--gold); font-size:28px; }
+header p { color:var(--muted); margin:9px 0 0; }
+main { max-width:950px; margin:auto; padding:20px; }
+.panel {
+  background:white;
+  padding:18px;
+  border:1px solid #eadfca;
+  border-radius:15px;
+  margin-bottom:18px;
+}
+h2 { font-size:19px; margin-top:0; }
+input,select,button {
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border:1px solid #ded5c6;
+  border-radius:9px;
+  font-size:15px;
+}
+button {
+  background:var(--gold);
+  color:white;
+  border:0;
+  font-weight:bold;
+  cursor:pointer;
+}
+button.secondary {
+  background:#f1eadc;
+  color:#5c4828;
+}
+.filters {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:8px;
+}
+.song {
+  padding:15px 0;
+  border-bottom:1px solid #eee5d8;
+}
+.song:last-child { border-bottom:0; }
+.song h3 { margin:0 0 6px; }
+.meta { color:var(--muted); font-size:13px; }
+.actions {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.actions button { width:auto; }
+iframe {
+  width:100%;
+  aspect-ratio:16/9;
+  border:0;
+  border-radius:12px;
+  margin-top:12px;
+}
+.empty { color:var(--muted); text-align:center; padding:20px; }
+footer { text-align:center; color:var(--muted); padding:25px; font-size:13px; }
 </style>
 </head>
 <body>
+
 <header>
-<div class="logo">🎤 KARAOKÉ & LOUANGE</div>
-<h1>Élevons nos voix !</h1>
-<p>Un espace pour chanter, louer et partager de beaux moments ensemble. ❤️</p>
+  <h1>♫ Karaoké & Louange</h1>
+  <p>Chantons ensemble pour célébrer Dieu</p>
 </header>
 
 <main>
-<h2>🔎 Trouver un chant</h2>
-<input id="search" placeholder="Titre, artiste..." oninput="render()">
+  <section class="panel">
+    <h2>🔎 Trouver un chant</h2>
+    <input id="search" placeholder="Rechercher un titre ou un artiste...">
+    <div class="filters">
+      <select id="language">
+        <option value="">Toutes les langues</option>
+        <option>Français</option>
+        <option>Anglais</option>
+        <option>Lingala</option>
+        <option>Créole</option>
+        <option>Swahili</option>
+        <option>Espagnol</option>
+      </select>
+      <select id="category">
+        <option value="">Toutes les catégories</option>
+        <option>Louange</option>
+        <option>Adoration</option>
+        <option>Gospel</option>
+        <option>Jeunesse</option>
+        <option>Gospel africain</option>
+      </select>
+      <select id="view">
+        <option value="all">Tous les chants</option>
+        <option value="favorites">Mes favoris</option>
+        <option value="queue">Ma file d'attente</option>
+      </select>
+    </div>
+  </section>
 
-<div class="categories" id="categories">
-<button class="active" onclick="filter('Tous',this)">Tous</button>
-<button onclick="filter('Louange',this)">🙌 Louange</button>
-<button onclick="filter('Adoration',this)">❤️ Adoration</button>
-<button onclick="filter('Gospel',this)">🎶 Gospel</button>
-<button onclick="filter('Jeunesse',this)">👥 Jeunesse</button>
-</div>
+  <section class="panel">
+    <h2>🎵 Ajouter un chant</h2>
+    <form id="songForm">
+      <input id="title" placeholder="Titre du chant" required>
+      <input id="artist" placeholder="Artiste ou groupe">
+      <select id="newLanguage" required>
+        <option value="">Choisir la langue</option>
+        <option>Français</option>
+        <option>Anglais</option>
+        <option>Lingala</option>
+        <option>Créole</option>
+        <option>Swahili</option>
+        <option>Espagnol</option>
+      </select>
+      <select id="newCategory" required>
+        <option value="">Choisir la catégorie</option>
+        <option>Louange</option>
+        <option>Adoration</option>
+        <option>Gospel</option>
+        <option>Jeunesse</option>
+        <option>Gospel africain</option>
+      </select>
+      <input id="youtube" type="url" placeholder="Lien YouTube de la vidéo karaoké" required>
+      <button type="submit">Ajouter à la bibliothèque</button>
+    </form>
+  </section>
 
-<h2>🎵 Ma bibliothèque</h2>
-<div id="songs"></div>
+  <section class="panel">
+    <h2>📚 Bibliothèque de chants</h2>
+    <div id="songs"></div>
+  </section>
 
-<h2>➕ Ajouter un chant</h2>
-<p class="note">Ajoute le lien d'une vidéo YouTube de karaoké ou d'accompagnement que tu es autorisé(e) à utiliser.</p>
-<input id="newTitle" placeholder="Titre du chant">
-<input id="newArtist" placeholder="Nom de l'artiste">
-<select id="newCategory">
-<option>Louange</option>
-<option>Adoration</option>
-<option>Gospel</option>
-<option>Jeunesse</option>
-</select>
-<input id="newUrl" placeholder="Lien YouTube">
-<button onclick="addSong()" style="width:100%">Ajouter à ma bibliothèque</button>
-
-<h2>❤️ Mes favoris</h2>
-<div id="favorites"></div>
-
-<h2>📋 Ma file de lecture</h2>
-<div id="queue"></div>
-
-<h2>▶️ Lecteur karaoké</h2>
-<div id="player">
-<p id="nowPlaying">Choisis un chant pour commencer !</p>
-<div id="video"></div>
-</div>
-<p class="note">Cette première version est une maquette. Les chants de démonstration ne contiennent pas encore de vidéos. Tu peux ajouter tes propres liens YouTube compatibles.</p>
+  <section class="panel" id="playerPanel" hidden>
+    <h2 id="playingTitle">Lecture</h2>
+    <div id="player"></div>
+    <button class="secondary" onclick="closePlayer()">Fermer le lecteur</button>
+  </section>
 </main>
 
-<footer>🎤 Karaoké & Louange · Chantons ensemble ❤️</footer>
+<footer>
+  Karaoké & Louange — Chantons ensemble dans la joie.
+</footer>
 
 <script>
-let songs=JSON.parse(localStorage.getItem('songs')||'[]');
-let favorites=JSON.parse(localStorage.getItem('favorites')||'[]');
-let queue=JSON.parse(localStorage.getItem('queue')||'[]');
-let category='Tous';
+const STORAGE_KEY = "karaokeLouangeSongs";
+let songs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+let favorites = JSON.parse(localStorage.getItem("karaokeFavorites") || "[]");
+let queue = JSON.parse(localStorage.getItem("karaokeQueue") || "[]");
 
-function save(){
-localStorage.setItem('songs',JSON.stringify(songs));
-localStorage.setItem('favorites',JSON.stringify(favorites));
-localStorage.setItem('queue',JSON.stringify(queue));
+const $ = id => document.getElementById(id);
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(songs));
+  localStorage.setItem("karaokeFavorites", JSON.stringify(favorites));
+  localStorage.setItem("karaokeQueue", JSON.stringify(queue));
 }
 
-function filter(value,button){
-category=value;
-document.querySelectorAll('.categories button').forEach(b=>b.classList.remove('active'));
-button.classList.add('active');
-render();
+function videoId(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes("youtu.be")) return u.pathname.slice(1);
+    if (u.hostname.includes("youtube.com")) {
+      if (u.pathname === "/watch") return u.searchParams.get("v");
+      if (u.pathname.startsWith("/embed/")) return u.pathname.split("/")[2];
+      if (u.pathname.startsWith("/shorts/")) return u.pathname.split("/")[2];
+    }
+  } catch(e) {}
+  return null;
 }
 
-function render(){
-let term=document.getElementById('search').value.toLowerCase();
-let list=songs.filter(s=>
-(s.title+' '+s.artist).toLowerCase().includes(term)&&
-(category==='Tous'||s.category===category)
-);
-document.getElementById('songs').innerHTML=list.length?list.map(s=>`
-<div class="song">
-<div class="cover">🎵</div>
-<div class="song-info"><strong>${escapeHTML(s.title)}</strong><small>${escapeHTML(s.artist)} · ${escapeHTML(s.category)}</small></div>
-<div class="actions">
-<button onclick="playSong('${s.id}')">▶</button>
-<button class="secondary" onclick="toggleFav('${s.id}')">${favorites.includes(s.id)?'❤️':'♡'}</button>
-<button class="secondary" onclick="addQueue('${s.id}')">＋</button>
-</div></div>`).join(''):'<p class="note">Aucun chant pour le moment. Ajoute ton premier chant ci-dessous !</p>';
+function render() {
+  const term = $("search").value.toLowerCase();
+  const lang = $("language").value;
+  const cat = $("category").value;
+  const mode = $("view").value;
 
-document.getElementById('favorites').innerHTML=cards(favorites);
-document.getElementById('queue').innerHTML=cards(queue);
-}
+  const filtered = songs.filter(s => {
+    const matches = (s.title + " " + s.artist).toLowerCase().includes(term);
+    return matches &&
+      (!lang || s.language === lang) &&
+      (!cat || s.category === cat) &&
+      (mode === "all" ||
+       (mode === "favorites" && favorites.includes(s.id)) ||
+       (mode === "queue" && queue.includes(s.id)));
+  });
 
-function escapeHTML(value){
-return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
+  $("songs").innerHTML = "";
 
-function cards(ids){
-let list=ids.map(id=>songs.find(s=>s.id===id)).filter(Boolean);
-return list.length?list.map(s=>`
-<div class="song">
-<div class="song-info"><strong>${escapeHTML(s.title)}</strong><small>${escapeHTML(s.artist)}</small></div>
-<button onclick="playSong('${s.id}')">▶</button>
-</div>`).join(''):'<p class="note">Rien pour le moment.</p>';
-}
+  if (!filtered.length) {
+    $("songs").innerHTML = '<p class="empty">Aucun chant trouvé pour le moment. Tu peux ajouter le premier chant ci-dessus !</p>';
+    return;
+  }
 
-function addSong(){
-let title=document.getElementById('newTitle').value.trim();
-let artist=document.getElementById('newArtist').value.trim()||'Artiste non renseigné';
-let category=document.getElementById('newCategory').value;
-let url=document.getElementById('newUrl').value.trim();
-let videoId=getVideoId(url);
-if(!title||!videoId){alert('Ajoute un titre et un lien YouTube valide.');return;}
-songs.push({id:Date.now().toString(),title,artist,category,videoId});
-save();
-document.getElementById('newTitle').value='';
-document.getElementById('newArtist').value='';
-document.getElementById('newUrl').value='';
-render();
-alert('Ton chant a bien été ajouté !');
-}
+  filtered.forEach(s => {
+    const item = document.createElement("article");
+    item.className = "song";
 
-function getVideoId(url){
-try{
-let u=new URL(url);
-if(u.hostname==='youtu.be')return u.pathname.slice(1);
-if(['youtube.com','www.youtube.com','m.youtube.com'].includes(u.hostname)){
-if(u.pathname==='/watch')return u.searchParams.get('v');
-if(u.pathname.startsWith('/embed/')||u.pathname.startsWith('/shorts/'))return u.pathname.split('/')[2];
-}
-}catch(e){}
-return null;
-}
+    const heading = document.createElement("h3");
+    heading.textContent = s.title;
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    meta.textContent = [s.artist, s.language, s.category].filter(Boolean).join(" • ");
 
-function playSong(id){
-let s=songs.find(x=>x.id===id);
-if(!s)return;
-document.getElementById('nowPlaying').textContent='🎵 '+s.title+' — '+s.artist;
-document.getElementById('video').innerHTML=
-'<iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(s.videoId)+'" title="Lecteur YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    const play = document.createElement("button");
+    play.textContent = "▶ Chanter";
+    play.onclick = () => playSong(s.id);
+
+    const fav = document.createElement("button");
+    fav.className = "secondary";
+    fav.textContent = favorites.includes(s.id) ? "♥ Favori" : "♡ Favori";
+    fav.onclick = () => {
+      favorites = favorites.includes(s.id)
+        ? favorites.filter(id => id !== s.id)
+        : [...favorites, s.id];
+      save(); render();
+    };
+
+    const add = document.createElement("button");
+    add.className = "secondary";
+    add.textContent = queue.includes(s.id) ? "✓ Dans la file" : "+ File d'attente";
+    add.onclick = () => {
+      if (!queue.includes(s.id)) queue.push(s.id);
+      save(); render();
+    };
+
+    actions.append(play, fav, add);
+    item.append(heading, meta, actions);
+    $("songs").append(item);
+  });
 }
 
-function toggleFav(id){
-favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];
-save();render();
+function playSong(id) {
+  const song = songs.find(s => s.id === id);
+  if (!song) return;
+  const idVideo = videoId(song.youtube);
+  if (!idVideo) {
+    alert("Ce lien YouTube ne semble pas valide.");
+    return;
+  }
+  $("playingTitle").textContent = "♫ " + song.title;
+  $("player").innerHTML = "";
+  const frame = document.createElement("iframe");
+  frame.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(idVideo);
+  frame.title = "Lecteur karaoké";
+  frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+  frame.allowFullscreen = true;
+  $("player").append(frame);
+  $("playerPanel").hidden = false;
+  $("playerPanel").scrollIntoView({behavior:"smooth"});
 }
 
-function addQueue(id){
-if(!queue.includes(id))queue.push(id);
-save();render();
+function closePlayer() {
+  $("player").innerHTML = "";
+  $("playerPanel").hidden = true;
 }
+
+$("songForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const title = $("title").value.trim();
+  const youtube = $("youtube").value.trim();
+  if (!videoId(youtube)) {
+    alert("Merci de saisir un lien YouTube valide.");
+    return;
+  }
+  songs.push({
+    id: Date.now().toString(),
+    title,
+    artist: $("artist").value.trim(),
+    language: $("newLanguage").value,
+    category: $("newCategory").value,
+    youtube
+  });
+  save();
+  event.target.reset();
+  render();
+  alert("Le chant a été ajouté à cette bibliothèque !");
+});
+
+["search","language","category","view"].forEach(id => {
+  $(id).addEventListener("input", render);
+  $(id).addEventListener("change", render);
+});
 
 render();
 </script>
 </body>
 </html>
+
